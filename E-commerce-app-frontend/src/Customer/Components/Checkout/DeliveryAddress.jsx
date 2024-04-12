@@ -1,7 +1,7 @@
 import { Box, Button, Grid, TextField } from '@mui/material'
 import React from 'react'
 import AddressCard from '../AddressCard/AddressCard'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { createOrder } from '../../../Redux/Order/Action'
 
@@ -9,8 +9,22 @@ const DeliveryAddress = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const user = useSelector(store => store?.auth?.user);
+    console.log("User Saved Address - ", user?.address);
     // Declaring address variable globally
     var address;
+
+    function handleCreateOrder(address) {
+
+        delete address.id;
+        
+        const orderData = {address, navigate};
+
+        dispatch(createOrder(orderData))
+        
+        console.log("Address - ", address);
+    }
+    
     function handleSubmit(e) {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
@@ -25,11 +39,8 @@ const DeliveryAddress = () => {
             mobile : data.get("phoneNumber")
         }
 
-        const orderData = {address, navigate};
+        handleCreateOrder(address)
 
-        dispatch(createOrder(orderData))
-        
-        console.log("Address - ", address);
     }
   
     return (
@@ -38,17 +49,24 @@ const DeliveryAddress = () => {
 
                 <Grid xs={12} lg={5}
                     className='border rounded-md shadow-md h-[30.5rem] overflow-y-scroll' >
+                    {user?.address.map((item) => 
+                    
                     <div className='p-5 py-7 border-b cursor-pointer'>
-                        <AddressCard address={address}  />
+                        <AddressCard address={item}  />
 
                         <Button
                             sx={{ mt: 2, bgcolor: "RGB(145 85 253)" }}
                             size='large'
                             variant='contained'
+                            onClick={() => handleCreateOrder(item)}
                         >
                             Deliver Here
                         </Button>
                     </div>
+                   
+                   )}
+                    
+                 
                 </Grid>
 
                 <Grid xs={12} lg={7} item>
@@ -146,6 +164,7 @@ const DeliveryAddress = () => {
                         </form>
                     </Box>
                 </Grid>
+
             </Grid>
         </div>
     )

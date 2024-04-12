@@ -9,7 +9,7 @@ import { mens_kurta } from '../../../Data/Mens_Kurta'
 import ProductCard from '../Product/ProductCard'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { findProductsById } from '../../../Redux/Product/Action'
+import { findProductsByCategory, findProductsById } from '../../../Redux/Product/Action'
 import { addItemToCart } from '../../../Redux/Cart/Action'
 
 const product = {
@@ -74,6 +74,8 @@ export default function ProductDetails() {
   const dispatch = useDispatch();
   const params = useParams();
   const {products} = useSelector(store => store);
+  const productsByCategory = useSelector(store => store?.products?.productsByCategory);
+  
 
   function handleAddToCart() {
       const data = {
@@ -86,12 +88,25 @@ export default function ProductDetails() {
       navigate('/cart')
   }
 
-  useEffect(()=>{
-    const data = {
-      productId : params.productId,
-    }
-    dispatch(findProductsById(data))
-  },[params.productId])
+    useEffect(()=>{
+      const data = {
+        productId : params.productId,
+      }
+      dispatch(findProductsById(data))
+
+      
+      
+    },[params.productId])
+    
+    useEffect(() => {
+      
+      const reqData = {
+        category : products?.product?.category?.name,
+      }
+      console.log(reqData)
+      dispatch(findProductsByCategory(reqData))
+
+    }, [])
 
   return (
     <div className="bg-white lg:px-20">
@@ -379,7 +394,7 @@ export default function ProductDetails() {
             <h1 className='text-xl font-bold py-5'>Similar Products</h1>
 
             <div className='flex flex-wrap space-y-5'>
-              {mens_kurta.map((item) => <ProductCard product={item} />)}
+              {productsByCategory?.map((item) => <ProductCard product={item} />)}
             </div>
       
         </section>

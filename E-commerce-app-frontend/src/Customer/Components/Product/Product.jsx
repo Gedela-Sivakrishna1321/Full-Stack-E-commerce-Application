@@ -35,6 +35,8 @@ export default function Product() {
   const params = useParams();
   const dispatch = useDispatch();
   const {products} = useSelector(store => store);
+  console.log("I'm In Product Page ", products);
+  console.log("Product Category - ", products?.product?.category?.name)
 
   const colorValue = searchParams.get("color");
   const sizeValue = searchParams.get("size");
@@ -382,7 +384,7 @@ export default function Product() {
               {/* Product grid */}
               <div className="lg:col-span-4 w-full border">
                 <div className='flex flex-wrap justify-center bg-white py-5 '>
-                  {products.products && products.products?.content?.map((item) => <ProductCard product={item} />)}
+                  {products.products && products.products?.content?.map((item) => <ProductCard product={item}  />)}
                 </div>
               </div>
             </div>

@@ -31,7 +31,7 @@ const OrderSummary = () => {
 
         {/* Cart Items */}
         <div className='col-span-2 '>
-          {order.order?.orderItems.map((item) => <CartItem item={item} />)}
+          {order?.order?.orderItems?.map((item) => <CartItem item={item} />)}
         </div>
 
         {/* Checkout the prices  */}

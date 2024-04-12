@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import HomeSectionCard from '../HomeSectionCard/HomeSectionCard'
 import AliceCarousel from 'react-alice-carousel'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
@@ -6,8 +6,11 @@ import { Button } from '@mui/material'
 import { mens_kurta } from '../../../Data/Mens_Kurta'
 import 'react-alice-carousel/lib/alice-carousel.css';
 import { EventObject } from 'react-alice-carousel';
+import { useDispatch, useSelector } from 'react-redux'
+import { findProducts, findProductsByCategory } from '../../../Redux/Product/Action'
 
-const HomeSectionCarousel = ({data,sectionName}) => {
+
+const HomeSectionCarousel = ({sectionName, data}) => {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -17,7 +20,23 @@ const HomeSectionCarousel = ({data,sectionName}) => {
         1024: { items: 4.5 }
     }
 
+    // const dispatch = useDispatch();
+    // // const productsByCategory = null;
+    // const productsByCategory = useSelector(store => store?.products?.productsByCategory);
+    // console.log(" P R O D U C T S B Y C A T E G O R Y  - ",Category ,"------>", productsByCategory);
+    
+    // useEffect(()=>{
+        
+    //     const reqdata = {
+    //         category : Category,
+    //     }
+    //     console.log("Calling ProductsByCategory --- ");
+    //     dispatch(findProductsByCategory(reqdata));
+        
+    // },[Category])
+
     const items = data.map((item) => <HomeSectionCard product={item} />)
+
 
     // const slidePrev = () => setActiveIndex(activeIndex - 1)
     // const slideNext = () => setActiveIndex(activeIndex + 1)

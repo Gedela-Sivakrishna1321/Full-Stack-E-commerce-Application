@@ -6,9 +6,12 @@ import {
   DELETE_PRODUCT_FAILURE,
   DELETE_PRODUCT_REQUEST,
   DELETE_PRODUCT_SUCCESS,
+  FIND_ALL_PRODUCTS_SUCCESS,
   FIND_PRODUCTS_FAILURE,
   FIND_PRODUCTS_REQUEST,
   FIND_PRODUCTS_SUCCESS,
+  FIND_PRODUCT_BY_CATEGORY_REQUEST,
+  FIND_PRODUCT_BY_CATEGORY_SUCCESS,
   FIND_PRODUCT_BY_ID_FAILURE,
   FIND_PRODUCT_BY_ID_REQUEST,
   FIND_PRODUCT_BY_ID_SUCCESS,
@@ -34,7 +37,7 @@ export const findProducts = (reqData) => async (dispatch) => {
     // pageSize=${pageSize}`)
 
     const { data } =
-      await api.get(`/api/products?color=${colors}&size=${sizes}&minPrice=${minPrice}&maxPrice=${maxPrice}&minDiscount=${minDiscount}&category=${category}&stock=${stock}&sort=${sort}&pageNumber=${pageNumber}&PageSize=${pageSize}`);
+      await api.get(`/api/products/?color=${colors}&size=${sizes}&minPrice=${minPrice}&maxPrice=${maxPrice}&minDiscount=${minDiscount}&category=${category}&stock=${stock}&sort=${sort}&pageNumber=${pageNumber}&PageSize=${pageSize}`);
 
     console.log("Products Data - ", data);
 
@@ -88,4 +91,42 @@ export const deleteProduct = (productId) => async (dispatch) => {
   } catch (error) {
     dispatch({type : DELETE_PRODUCT_FAILURE, payload : error.message})
   }
+}
+
+export const findProductsByCategory = (reqData) => async (dispatch) => {
+
+  dispatch({type : FIND_PRODUCT_BY_CATEGORY_REQUEST})
+  try {
+
+    const {data} = await api.get(`api/products/${reqData.category}`);
+
+    console.log("Products By Category Fetched Successfully - ", data);
+
+    dispatch({
+      type : FIND_PRODUCT_BY_CATEGORY_SUCCESS,
+      payload : data
+    })
+    
+  } catch (error) {
+    console.log("Error occured while fetching Products By Category - ", error.message);
+  }
+}
+
+export const findAllProducts = () => async (dispatch) => {
+
+    try {
+      
+      const {data} = await api.get('api/products/all');
+
+      console.log("All Products Data fetched successfully ,,,,", data);
+
+      dispatch({
+        type : FIND_ALL_PRODUCTS_SUCCESS,
+        payload : data,
+      })
+    } catch (error) {
+
+      console.log("Error occured while finding all products ", error.message);
+    
+    }
 }

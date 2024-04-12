@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { createProduct } from '../../Redux/Product/Action';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
 
 const initialSizes = [
   {name : "S", quantity : 0},
@@ -55,6 +56,7 @@ const CreateProductForm = () => {
     e.preventDefault();
     dispatch(createProduct(productData));
     console.log("Product created successfully !");
+    // toast.success("Product created successfully !");
     // console.log("ProductData - ", productData);
   }
 
@@ -261,6 +263,8 @@ const CreateProductForm = () => {
                     </Grid>
                 </Grid>
           </form>
+
+          <ToastContainer/>
    
     </div>
   )

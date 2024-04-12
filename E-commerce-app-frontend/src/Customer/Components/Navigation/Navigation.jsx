@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import AuthModel from '../../Auth/AuthModel'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUser, logout } from '../../../Redux/Auth/Action'
+import { getCart } from '../../../Redux/Cart/Action'
 
 const navigation = {
   categories: [
@@ -41,7 +42,7 @@ const navigation = {
             { name: 'T-Shirts', id: 't-shirt' },
             { name: 'Jackets', id: 'jacket' },
             { name: 'Gouns', id: 'gouns' },
-            { name: 'Sarees', id: 'saree' },
+            { name: 'Sarees', id: 'sarees' },
             { name: 'Kurtas', id: 'kurtas' },
           ],
         },
@@ -148,6 +149,8 @@ export default function Navigation() {
   const location = useLocation();
   const {auth} = useSelector(store => store);
   const jwt = localStorage.getItem("jwt");
+  const cart = useSelector(store => store?.cart?.cart);
+  // console.log("USER HANDBAG -", cart);
 
   function handleCloseUserMenu(e) {
     setAnchorE1(null)
@@ -174,6 +177,7 @@ export default function Navigation() {
   useEffect(()=>{
     if(jwt) {
       dispatch(getUser(jwt))
+      dispatch(getCart())
     }
   }, [jwt, auth.jwt])
 
@@ -355,11 +359,11 @@ export default function Navigation() {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <a href="#">
+                <a href="/">
                   <span className="sr-only">Your Company</span>
                   <img
                     className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                    src="https://d3sxshmncs10te.cloudfront.net/icon/free/svg/432492.svg?token=eyJhbGciOiJoczI1NiIsImtpZCI6ImRlZmF1bHQifQ__.eyJpc3MiOiJkM3N4c2htbmNzMTB0ZS5jbG91ZGZyb250Lm5ldCIsImV4cCI6MTcxMjU2OTk2OCwicSI6bnVsbCwiaWF0IjoxNzEyMzEwNzY4fQ__.2876085faf885f14b86daa40dd2d619989d2d7efaafed2561df476de8c79f2a9"
                     alt=""
                   />
                 </a>
@@ -508,6 +512,13 @@ export default function Navigation() {
                           }}>
                             Home
                           </MenuItem>
+
+                          {/* <MenuItem onClick={() => {
+                            navigate("/cart");
+                            handleCloseUserMenu();
+                          }} >
+                            Cart
+                          </MenuItem> */}
                          
                           <MenuItem onClick={() => {navigate('/account/order')
                                                   handleCloseUserMenu()}} >
@@ -539,12 +550,13 @@ export default function Navigation() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-2 flex items-center p-2">
+                  <a onClick={() => navigate("/cart")} className="group -m-2 flex items-center p-2">
                     <ShoppingBagIcon
-                      className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                      
+                      className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 cursor-pointer"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{cart?.totalItem}</span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
                 </div>
