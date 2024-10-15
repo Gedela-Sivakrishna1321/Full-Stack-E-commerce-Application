@@ -1,4 +1,5 @@
-import { api } from "../../Config/Config";
+import axios from "axios";
+import { api, API_BASE_URL } from "../../Config/Config";
 import {
   ADD_ITEM_TO_CART_FAILURE,
   ADD_ITEM_TO_CART_REQUEST,
@@ -14,13 +15,18 @@ import {
   UPDATE_CART_ITEM_SUCCESS,
 } from "./ActionType";
 
-export const getCart = () => async (dispatch) => {
+export const getCart = (jwt) => async (dispatch) => {
   dispatch({ type: GET_CART_REQUEST });
 
   try {
-   console.log("Hello --- JEE")
-    const  {data}  = await api.get("/api/cart/");
-    console.log("User Cart fetched successfully ..!")
+  //  console.log("Hello --- JEE")
+    const  {data}  
+                    = await axios.get(`${API_BASE_URL}/api/cart/`, {
+                      headers : {
+                          "Authorization" : `Bearer ${jwt}`
+                      }
+                  } )
+    // console.log("User Cart fetched successfully ..!")
     dispatch({ type: GET_CART_SUCCESS, payload: data });
     console.log("User Cart - ", data);
 

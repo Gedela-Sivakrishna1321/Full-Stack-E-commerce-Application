@@ -1,15 +1,18 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import HomePage from '../Customer/Pages/HomePage/HomePage'
 import Navigation from '../Customer/Components/Navigation/Navigation'
 import Footer from '../Customer/Components/Footer/Footer'
 import Cart from '../Customer/Components/Cart/Cart'
 import Product from '../Customer/Components/Product/Product'
-import ProductDetails from '../Customer/Components/Product Details/ProductDetails'
+// import ProductDetails from '../Customer/Components/Product Details/ProductDetails'
 import Checkout from '../Customer/Components/Checkout/Checkout'
 import Order from '../Customer/Components/Order/Order'
 import OrderDetails from '../Customer/Components/Order/OrderDetails'
 import PaymentSuccess from '../Customer/Components/Payment/PaymentSuccess'
+import Loader from '../Loader/Loader'
+
+const ProductDetails = React.lazy(() => import('../Customer/Components/Product Details/ProductDetails'));
 
 const CustomerRouter = () => {
   return (
@@ -19,6 +22,7 @@ const CustomerRouter = () => {
             <Navigation/>
         </div>
 
+            <Suspense fallback={<Loader/>}>
         <Routes>
             <Route path='/' element={<HomePage/>} />
             <Route path='/login' element={<HomePage/>} />
@@ -31,6 +35,8 @@ const CustomerRouter = () => {
             <Route path='/account/order/:orderId' element={<OrderDetails/>} />
             <Route path='/payment/:orderId' element={<PaymentSuccess/>} />
         </Routes>
+
+            </Suspense>
 
 
 

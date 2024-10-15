@@ -17,8 +17,8 @@ const OrderCard = ({orderItem, order}) => {
                                 <p>{orderItem.product.title}</p>
                                 <p className='opacity-50 text-xs font-semibold'>Size: {orderItem.size}</p>
                                 <p className='opacity-50 text-xs font-semibold'>Color: {orderItem.product.color}</p>
-                                <p> <span className='opacity-50 text-xs font-semibold'>Price</span> - ₹{order.totalDiscountedPrice} </p>
-                                <p><span className='opacity-50 text-xs font-semibold'>Ordered on </span> - {order.orderDate.substring(0,10)}
+                                <p> <span className='opacity-50 text-xs font-semibold'>Price : </span>  ₹{order.totalDiscountedPrice} </p>
+                                <p><span className='opacity-50 text-xs font-semibold'>Ordered on : </span>  {order.orderDate.substring(0,10)}
                                  </p>
                             </div>
                         </div>

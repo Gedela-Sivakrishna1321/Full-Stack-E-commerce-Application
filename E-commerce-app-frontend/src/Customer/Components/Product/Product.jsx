@@ -35,8 +35,8 @@ export default function Product() {
   const params = useParams();
   const dispatch = useDispatch();
   const {products} = useSelector(store => store);
-  console.log("I'm In Product Page ", products);
-  console.log("Product Category - ", products?.product?.category?.name)
+  // console.log("I'm In Product Page ", products);
+  // console.log("Product Category - ", products?.product?.category?.name)
 
   const colorValue = searchParams.get("color");
   const sizeValue = searchParams.get("size");

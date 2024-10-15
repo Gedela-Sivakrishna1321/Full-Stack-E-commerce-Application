@@ -199,12 +199,22 @@ const CreateProductForm = () => {
                                 onChange={handleChange}
                                 label="Third Level Category"
                               >
+                                 {/* {productData.secondLevelCategory === "clothing" && 
+                                 <> */}
                                   <MenuItem value="top" >Tops</MenuItem>
                                   <MenuItem value="women_dress" >Dresses</MenuItem>
                                   <MenuItem value="t-shirts" >T-Shirts</MenuItem>
                                   <MenuItem value="mens_kurta" >Men Kurtas</MenuItem>
                                   <MenuItem value="saree" >Saree</MenuItem>
                                   <MenuItem value="lengha_choli" >Lengha Choli</MenuItem>
+                                  {/* </>} */}
+
+                                  {/* {productData.secondLevelCategory === "accessories" && 
+                                    <> */}
+                                      <MenuItem value="watches" >Watches</MenuItem>
+                                      <MenuItem value="mobiles" >Mobiles</MenuItem>
+                                    {/* </>
+                                  } */}
 
                               </Select>
                           </FormControl>

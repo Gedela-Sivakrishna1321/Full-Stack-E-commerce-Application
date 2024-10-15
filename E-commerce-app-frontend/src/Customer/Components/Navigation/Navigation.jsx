@@ -9,6 +9,9 @@ import AuthModel from '../../Auth/AuthModel'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUser, logout } from '../../../Redux/Auth/Action'
 import { getCart } from '../../../Redux/Cart/Action'
+import { EditProfileModel, OtpModal } from '../../../Admin/Admin'
+import { toast,ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const navigation = {
   categories: [
@@ -148,9 +151,39 @@ export default function Navigation() {
   const dispatch = useDispatch();
   const location = useLocation();
   const {auth} = useSelector(store => store);
+  const user = useSelector(store => store?.auth?.user);
   const jwt = localStorage.getItem("jwt");
   const cart = useSelector(store => store?.cart?.cart);
   // console.log("USER HANDBAG -", cart);
+  var cartTotalItems = cart?.totalItem > 0 ? cart.totalItem : '';
+  cartTotalItems = jwt == null ? 0 : cartTotalItems;
+  const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
+  const [formData, setFormData] = useState({
+    id : '',
+    firstName : '',
+    lastName : '',
+    email : '',
+    mobile : '',
+  });
+
+  // console.log("User in Navigation = ", user);
+  // console.log("FormData = ", formData);
+  // console.log("Profile Data = ", profiledata);
+  const handleUpdatedInputChange = (e) => {
+    const {name, value} = e.target;
+    console.log(value);
+    setFormData(
+        {...formData,
+        [name] : value,}
+    )
+  }
+
+  function editProfileModalCloseHandler(event, reason) {
+    if(reason === 'backdropClick') {
+      return;
+    }
+    setOpenEditProfileModal(false);
+  }
 
   function handleCloseUserMenu(e) {
     setAnchorE1(null)
@@ -162,6 +195,7 @@ export default function Navigation() {
 
   function handleOpen() {
       setOpenAuthModel(true);
+      navigate('/login')
   }
 
   function handleClose() {
@@ -174,26 +208,59 @@ export default function Navigation() {
       close();
   }
 
+  // This checks whether jwt token is present, If present then it fetches the user & cart info
+  // Auto login is possible because of jwt 
   useEffect(()=>{
     if(jwt) {
       dispatch(getUser(jwt))
-      dispatch(getCart())
+      dispatch(getCart(jwt))
     }
-  }, [jwt, auth.jwt])
+  }, [jwt, auth.jwt, localStorage.getItem("jwt")])
+
+
+  // useEffect(()=>{
+  //   if(user) {
+  //     if(user.role === "ADMIN") {
+  //       navigate("/admin/");
+  //     }
+  //     else {
+  //       navigate("/")
+  //     }
+  //   }
+  // },[jwt, auth.jwt])
+
+  // useEffect(()=>{
+    
+  //     cartTotalItems = cart?.totalItem
+    
+   
+  // },[ jwt, auth.jwt])
 
   useEffect(()=>{
     if(auth.user) {
       handleClose();
     }
 
-    if(location.pathname === '/login' || location.pathname === '/register') {
-      navigate('/')
+    // After successfull login / signup, this logic redirects to Home page
+    if(location.pathname === '/login' || location.pathname === '/register' || jwt !== null) {
+      if(user?.role === "ADMIN") {
+        navigate("/admin");
+        // console.log("ADMIN LOGGED IN");
+      }
+      else {
+        navigate('/');
+        // console.log("USER LOGGED IN");
+      }
     }
-  }, [auth.user])
+  }, [auth.user]);
+
+
 
   function handleLogout() {
+    cartTotalItems = 0;
     dispatch(logout());
     handleCloseUserMenu();
+    navigate("/");
   }
 
   return (
@@ -340,9 +407,9 @@ export default function Navigation() {
       </Transition.Root>
 
       <header className="relative bg-white">
-        <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+        {/* <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
           Get free delivery on orders over $100
-        </p>
+        </p> */}
 
         <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="border-b border-gray-200">
@@ -363,8 +430,8 @@ export default function Navigation() {
                   <span className="sr-only">Your Company</span>
                   <img
                     className="h-8 w-auto"
-                    src="https://d3sxshmncs10te.cloudfront.net/icon/free/svg/432492.svg?token=eyJhbGciOiJoczI1NiIsImtpZCI6ImRlZmF1bHQifQ__.eyJpc3MiOiJkM3N4c2htbmNzMTB0ZS5jbG91ZGZyb250Lm5ldCIsImV4cCI6MTcxMjU2OTk2OCwicSI6bnVsbCwiaWF0IjoxNzEyMzEwNzY4fQ__.2876085faf885f14b86daa40dd2d619989d2d7efaafed2561df476de8c79f2a9"
-                    alt=""
+                    src='https://res.cloudinary.com/dheuqshro/image/upload/v1725447944/E-commerce%20Project/styloria_adh81h.png'
+                     alt=""
                   />
                 </a>
               </div>
@@ -507,10 +574,18 @@ export default function Navigation() {
                         >
                         
                           <MenuItem onClick={() => {
-                            navigate("/");
+                              const profiledata = {
+                                id : user?.id,
+                                firstName : user?.firstName,
+                                lastName : user?.lastName,
+                                email : user?.email,
+                                mobile : user?.mobile,
+                            }
+                            setFormData(profiledata)
+                            setOpenEditProfileModal(true);
                             handleCloseUserMenu();
                           }}>
-                            Home
+                            Profile
                           </MenuItem>
 
                           {/* <MenuItem onClick={() => {
@@ -526,7 +601,7 @@ export default function Navigation() {
                           </MenuItem>
                          
                           <MenuItem onClick={handleLogout}>
-                            Logout
+                             <a href="/">Logout</a>
                           </MenuItem>
                        
                         </Menu>
@@ -556,7 +631,7 @@ export default function Navigation() {
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 cursor-pointer"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{cart?.totalItem}</span>
+                   {cartTotalItems > 0 && <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{cartTotalItems}</span>}
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
                 </div>
@@ -569,6 +644,10 @@ export default function Navigation() {
       </header>
 
       <AuthModel handleClose={handleClose} open={openAuthModel} />
+      <EditProfileModel open={openEditProfileModal} handleClose={editProfileModalCloseHandler} 
+      formData={formData} handleUpdatedInputChange={handleUpdatedInputChange} toast={toast}
+      />
+      {/* <ToastContainer/> */}
     </div>
   )
 }

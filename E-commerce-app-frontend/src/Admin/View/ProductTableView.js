@@ -8,7 +8,7 @@ const ProductTableView = () => {
   const dispatch = useDispatch();
   const {products} = useSelector(store => store);
 
-  console.log("Products ---> ", products);
+  // console.log("Products ---> ", products);
 
 //   const deleteProductHandler = (productId) => {
 //     dispatch(deleteProduct(productId));

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { API_BASE_URL } from "../../Config/Config"
-import { GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS } from "./ActionType";
+import { api, API_BASE_URL } from "../../Config/Config"
+import { GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS, UPDATE_PROFILE_SUCCESS } from "./ActionType";
 
 const registerRequest = () => ({type : REGISTER_REQUEST});
 const registerSuccess = (user) => ({type : REGISTER_SUCCESS, payload : user});
@@ -76,4 +76,21 @@ export const logout = () => (dispatch) => {
     localStorage.clear();
     // navigate("/")
     console.log("User Logged out successfull ..!")
+}
+
+function updateProfileSuccess(user) {
+    return {
+        type : UPDATE_PROFILE_SUCCESS,
+        payload : user
+    }
+}
+
+export const updateUserProfile = (reqData) => async (dispatch) => {
+    try {
+        const {data} = await api.post("/auth/update-profile",reqData);
+        console.log("Updated User Profile Data = ", data);
+        dispatch(updateProfileSuccess(data));
+    } catch (error) {
+        console.log("Error occured while updating user profile = ", error);
+    }
 }

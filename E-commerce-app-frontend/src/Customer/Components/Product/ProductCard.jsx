@@ -1,11 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './ProductCard.css'
 import { useNavigate } from 'react-router-dom'
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const ProductCard = ({product}) => {
+
+  
+  useEffect(()=>{
+    Aos.init({once: true,
+              duration: 1000,
+    });
+  },[])
+
   const navigate = useNavigate();
+
+  function handleProductNavigate() {
+    // console.log("Yey, I am navigating to Product Details Page")
+    navigate(`/product/${product.id}`);
+    localStorage.setItem("Category", product.category.name);
+  }
   return (
-    <div onClick={() => navigate(`/product/${product.id}`)} className='productCard w-[15rem] m-3 transition-all cursor-pointer border hover:border-none hover:'>
+    <div data-aos="zoom-in" 
+        onClick={handleProductNavigate} 
+          className='productCard w-[15rem] m-3 transition-all cursor-pointer border hover:border-none hover:'>
         <div className='h-[20rem]'>
             <img  className='h-full w-full object-cover object-left-top'
             src={product.imageUrl} alt="" />

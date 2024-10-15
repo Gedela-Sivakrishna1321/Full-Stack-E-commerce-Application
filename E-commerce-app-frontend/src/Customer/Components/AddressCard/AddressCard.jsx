@@ -10,8 +10,9 @@ const AddressCard = ({address}) => {
 
   return (
     <div className='space-y-3'>
-        <p className='font-semibold'> {address?.firstName ? auth?.user?.firstName : ""} {address?.lastName ? auth?.user?.lastName : ""}</p>
-        <p>{ address?.state ? address?.state :  ""}, {address?.city ? address?.city : ""}, { address?.streetAddress ? address?.streetAddress : ""}, {address?.zipcode ? address?.zipcode : ""} </p>
+        {/* <p className='font-semibold'> {address?.firstName ? auth?.user?.firstName : ""} {address?.lastName ? auth?.user?.lastName : ""}</p> */}
+        <p className='font-semibold'> {address?.firstName ? address?.firstName : ""} {address?.lastName ? address?.lastName : ""}</p>
+        <p>{ address?.state ? address?.state :  ""}, {address?.city ? address?.city : ""}, { address?.streetAddress ? address?.streetAddress : ""}, {address?.zipCode ? address?.zipCode : ""} </p>
         <div className='space-y-1'>
             <p className='font-semibold'>Phone Number</p>
             <p>{address?.mobile ? address?.mobile : ""}</p>

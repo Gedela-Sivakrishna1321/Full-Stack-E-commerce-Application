@@ -99,10 +99,13 @@ const RegisterForm = () => {
         <div className='flex justify-center flex-col items-center'>
             <div className='py-3 flex items-center'>
                 <p >If you already have account ? </p>
-                <Button  onClick={() => navigate('/login')}
+                <Button  onClick={() => localStorage.setItem("login", true)}
                  className='ml-5' size='small' >Login</Button>
             </div>
         </div>
+
+        
+
     </div>
   )
 }

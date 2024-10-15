@@ -3,12 +3,19 @@ import MainCarousel from '../../Components/MainCarousel/MainCarousel'
 import HomeSectionCarousel from '../../Components/HomeSectionCarousel/HomeSectionCarousel'
 import { useSelector, useDispatch } from 'react-redux'
 import { findAllProducts, findProductsByCategory } from '../../../Redux/Product/Action'
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const HomePage = () => {
 
+  useEffect(()=>{
+    AOS.init();
+  },[])
+
+
   const dispatch = useDispatch();
   const allProducts = useSelector(store => store?.products?.allProducts);
-  console.log("ALL PRODUCTS - ", allProducts);
+  // console.log("ALL PRODUCTS - ", allProducts);
   const createdProduct = useSelector(store => store?.products?.createdProduct);
 
   useEffect(() => {
@@ -24,17 +31,18 @@ const HomePage = () => {
   const men_shirts = allProducts.filter((item) => item.category.name === "shirt");
 
   
+  
   return (
     <div>
         <MainCarousel/>
 
         <div className='py-20 space-y-10 flex flex-col lg:px-10 px-5'>
-            <HomeSectionCarousel sectionName={"Men's Kurta"} data={men_kurtas}  />
-            <HomeSectionCarousel  sectionName={"Men's Shirts"} data={men_shirts} />
+            <HomeSectionCarousel data-aos="fade-up" sectionName={"Men's Kurta"} data={men_kurtas}  />
+            <HomeSectionCarousel data-aos="fade-up"  sectionName={"Men's Shirts"} data={men_shirts} />
             {/* <HomeSectionCarousel data={mensShoesPage1} sectionName={"Men's Shoes"} Category={""} /> */}
-            <HomeSectionCarousel  sectionName={"Women's Dresses"} data={women_dresses}/>
-            <HomeSectionCarousel  sectionName={"Women's Tops"} data={women_tops} />
-            <HomeSectionCarousel  sectionName={"Women's Sarees"} data={women_sarees} />
+            <HomeSectionCarousel data-aos="fade-up"  sectionName={"Women's Dresses"} data={women_dresses}/>
+            <HomeSectionCarousel data-aos="fade-up"  sectionName={"Women's Tops"} data={women_tops} />
+            <HomeSectionCarousel data-aos="fade-up"  sectionName={"Women's Sarees"} data={women_sarees} />
             {/* <HomeSectionCarousel  sectionName={"Women's Tops"} data={"top"} /> */}
         </div>
 

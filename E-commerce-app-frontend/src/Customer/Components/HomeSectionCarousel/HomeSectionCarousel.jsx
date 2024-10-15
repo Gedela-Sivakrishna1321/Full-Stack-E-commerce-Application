@@ -8,9 +8,15 @@ import 'react-alice-carousel/lib/alice-carousel.css';
 import { EventObject } from 'react-alice-carousel';
 import { useDispatch, useSelector } from 'react-redux'
 import { findProducts, findProductsByCategory } from '../../../Redux/Product/Action'
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 
 const HomeSectionCarousel = ({sectionName, data}) => {
+
+    useEffect(()=>{
+        Aos.init({once: true,});
+      },[])
 
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -50,9 +56,11 @@ const HomeSectionCarousel = ({sectionName, data}) => {
     // }
 
     return (
-        <div className='border'>
+        <div   className='border'>
             <h1 className='font-extrabold text-2xl text-gray-800 px-4 py-5'>{sectionName}</h1>
-            <div className='p-5 relative'>
+            <div 
+            
+            className='p-5 relative'>
                 <AliceCarousel
                     // activeIndex={activeIndex}
                     items={items}

@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from 'react'
 import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
@@ -11,6 +9,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { findProductsByCategory, findProductsById } from '../../../Redux/Product/Action'
 import { addItemToCart } from '../../../Redux/Cart/Action'
+import { toast, ToastContainer  } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css";
+import AuthModel from '../../Auth/AuthModel'
+import SimilarProducts from './SimilarProducts'
+import Loader from '../../../Loader/Loader'
 
 const product = {
   name: 'Basic Tee 6-Pack',
@@ -74,39 +77,77 @@ export default function ProductDetails() {
   const dispatch = useDispatch();
   const params = useParams();
   const {products} = useSelector(store => store);
-  const productsByCategory = useSelector(store => store?.products?.productsByCategory);
+  const allProducts = useSelector(store => store.products.allProducts);
+  var productById = allProducts.filter((productItem) => params.productId == productItem.id)[0];
+  // console.log(typeof(params.productId));
+  // console.log(typeof(allProducts[0].id));
+  // console.log("Comparing --> ",params.productId == allProducts[76].id);
+  console.log("ALL PRODUCTS = ", allProducts);
+  console.log("Product Id = ", params.productId);
+  console.log("Product BY ID BY FILTERING ALL PRODUCTS = ", productById);
+  // var productsByCategory = useSelector(store => store?.products?.productsByCategory);
+  // productsByCategory = productsByCategory.filter((product) => product.imageUrl !== products.product.imageUrl);
+  const user = useSelector(store => store?.auth?.user);
+  
+  const [openAuthModel, setOpenAuthModel] = useState(false);
+
+  function handleOpen() {
+    setOpenAuthModel(true);
+}
+
+function handleClose() {
+  setOpenAuthModel(false);
+}
+
+  function notifySize() {
+    toast.info("Please Select the Size", {
+      position: 'top-right'
+    });
+  }
+
+  useEffect(()=>{
+
+  },[])
   
 
-  function handleAddToCart() {
-      const data = {
-        productId : params.productId,
-        size : selectedSize.name,
+  function handleAddToCart(e) {
+      e.preventDefault();
+      if(user) {
+
+        if(selectedSize.name) {
+
+          const data = {
+            productId : params.productId,
+            size : selectedSize.name,
+          }
+          console.log("Item Data - ", data);
+  
+            dispatch(addItemToCart(data));
+            console.log("Adding Product to cart ... " );
+            navigate('/cart')
+
+        }
+        else {
+          notifySize();
+        }
+
       }
-      console.log("Item Data - ", data);
-      dispatch(addItemToCart(data));
-      console.log("Adding Product to cart ... " );
-      navigate('/cart')
+      else {
+        handleOpen();
+        // console.log("Display Toast Message !!");
+      }
   }
 
     useEffect(()=>{
-      const data = {
-        productId : params.productId,
-      }
-      dispatch(findProductsById(data))
-
-      
+      // const data = {
+      //   productId : params.productId,
+      // }
+      // dispatch(findProductsById(data))
+      productById = allProducts.filter((product) => product.id === params.productId)[0];
       
     },[params.productId])
     
-    useEffect(() => {
-      
-      const reqData = {
-        category : products?.product?.category?.name,
-      }
-      console.log(reqData)
-      dispatch(findProductsByCategory(reqData))
 
-    }, [])
 
   return (
     <div className="bg-white lg:px-20">
@@ -140,6 +181,8 @@ export default function ProductDetails() {
           </ol>
         </nav>
 
+        {productById ? 
+
         <section className='grid grid-cols-1 lg:grid-cols-2 px-4 pt-10 gap-y-10'>
         
         {/* Image gallery */}
@@ -147,7 +190,7 @@ export default function ProductDetails() {
        
           <div className="max-w-[30rem] max-h-[35rem] overflow-hidden rounded-lg">
             <img
-              src={products.product?.imageUrl}
+              src={productById.imageUrl}
               alt={product.images[0].alt}
               className="h-full w-full object-cover object-center"
             />
@@ -166,11 +209,13 @@ export default function ProductDetails() {
         </div>
 
         {/* Product info */}
-        <div className="max-h-max max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
+        { productById ?
+       
+       <div className="max-h-max max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
           <div className="lg:col-span-2 ">
-            <h1 className="text-lg lg:text-xl font-semibold text-gray-900 ">{products.product?.brand}</h1>
+            <h1 className="text-lg lg:text-xl font-semibold text-gray-900 ">{productById?.brand}</h1>
             <h1 className="text-lg lg:text-xl  text-gray-900 opacity-60 pt-1 ">  
-                {products.product?.title}</h1>
+                {productById?.title}</h1>
             
           </div>
 
@@ -179,9 +224,9 @@ export default function ProductDetails() {
            
             {/* Price Details */}
             <div className='flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6'>
-                <p className='font-semibold'>₹{products.product?.discountedPrice}</p>
-                <p className='line line-through opacity-50'>₹{products.product?.price}</p>
-                <p className='font-semibold text-green-600'>{products.product?.discountPercent}% off</p>
+                <p className='font-semibold'>₹{productById?.discountedPrice}</p>
+                <p className='line line-through opacity-50'>₹{productById?.price}</p>
+                <p className='font-semibold text-green-600'>{productById?.discountPercent}% off</p>
             </div>
 
             {/* Reviews */}
@@ -207,7 +252,7 @@ export default function ProductDetails() {
                 <RadioGroup value={selectedSize} onChange={setSelectedSize} className="mt-4">
                   <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
                   <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
-                    {product.sizes.map((size) => (
+                    {product?.sizes.map((size) => (
                       <RadioGroup.Option
                         key={size.name}
                         value={size}
@@ -257,7 +302,7 @@ export default function ProductDetails() {
                 </RadioGroup>
               </div>
 
-              <Button onClick={handleAddToCart} type='submit' variant='contained' className='mt-4' sx={{px:"2rem", py:"1rem", bgcolor:"#9155fd", marginTop:"1rem"}}  >
+              <Button onClick={(e) => handleAddToCart(e)} type='submit' variant='contained' className='mt-4' sx={{px:"2rem", py:"1rem", bgcolor:"#9155fd", marginTop:"1rem"}}  >
                  Add To Cart
               </Button>
             </form>
@@ -269,7 +314,7 @@ export default function ProductDetails() {
               <h3 className="sr-only">Description</h3>
 
               <div className="space-y-6">
-                <p className="text-base text-gray-900">{products.product?.description}</p>
+                <p className="text-base text-gray-900">{productById?.description}</p>
               </div>
             </div>
 
@@ -278,7 +323,7 @@ export default function ProductDetails() {
 
               <div className="mt-4">
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                  {product.highlights.map((highlight) => (
+                  {product?.highlights.map((highlight) => (
                     <li key={highlight} className="text-gray-400">
                       <span className="text-gray-600">{highlight}</span>
                     </li>
@@ -291,13 +336,23 @@ export default function ProductDetails() {
               <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
               <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{product.details}</p>
+                <p className="text-sm text-gray-600">{productById?.details}</p>
               </div>
             </div>
           </div>
+
         </div>
-       
+        :
+        <Loader/>
+       }
         </section>
+
+        :
+
+        <Loader/>
+      }
+
+        
 
         {/* Review & Ratings */}
         <section>
@@ -390,15 +445,14 @@ export default function ProductDetails() {
         </section>
 
         {/* Similar Products */}
-        <section className='pt-10'>
-            <h1 className='text-xl font-bold py-5'>Similar Products</h1>
+        <SimilarProducts id={productById?.id} />
 
-            <div className='flex flex-wrap space-y-5'>
-              {productsByCategory?.map((item) => <ProductCard product={item} />)}
-            </div>
-      
-        </section>
       </div>
+
+        <ToastContainer/>
+
+        <AuthModel handleClose={handleClose} open={openAuthModel} />
+
     </div>
   )
 }

@@ -69,7 +69,7 @@ const LoginForm = ({handleClose}) => {
         <div className='flex justify-center flex-col items-center'>
             <div className='py-3 flex items-center'>
                 <p >If you don't have account ? </p>
-                <Button  onClick={() => navigate('/register')}
+                <Button  onClick={() => localStorage.setItem("login", false)}
                  className='ml-5' size='small' >Register</Button>
             </div>
         </div>

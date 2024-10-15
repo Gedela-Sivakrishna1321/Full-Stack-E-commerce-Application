@@ -7,12 +7,12 @@ export const createOrder = (reqData) => async (dispatch) => {
 
     try {
         const {data} = await api.post(`/api/orders/`, 
-        reqData.address);
+        reqData.id);
 
         if(data.id) {
             reqData.navigate({search : `step=3&order_id=${data.id}`});
         }
-        console.log("Created order - ", data);
+        console.log("Order got Placed Successfully  - ", data);
         dispatch({type : CREATE_ORDER_SUCCESS, payload : data})
     } catch (error) {
         dispatch({type : CREATE_ORDER_FAILURE, payload : error.message})

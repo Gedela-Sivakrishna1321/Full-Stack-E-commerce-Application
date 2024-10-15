@@ -50,11 +50,11 @@ const PaymentSuccess = () => {
 
         <Grid container className='space-y-5 py-5 pt-20'>
                 
-               {order?.order?.orderItems.map((item) => <Grid container item className='shadow-xl rounded-md p-5'
+               {order?.order?.orderItems.map((item) => <Grid container item className='shadow-xl rounded-md p-5 border'
                     sx={{alignItems:"center", justifyContent:'space-between'}}
                 >
                     <Grid item xs={6}>
-                            <div className='flex items-center'>
+                            <div className='flex items-center '>
                                 <img  className='w-[7rem] h-[7rem] object-cover object-top'
                                 src={item.product?.imageUrl} alt="" />
 

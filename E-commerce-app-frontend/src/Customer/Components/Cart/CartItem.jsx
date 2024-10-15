@@ -28,7 +28,7 @@ const CartItem = ({item}) => {
         dispatch(updateCartItem(data))
     }
 
-    console.log(item);
+    // console.log(item);
 
 
 
@@ -47,15 +47,15 @@ const CartItem = ({item}) => {
                     <p className='opacity-70 '>Size: {item.size},{item.product.color}</p>
                     <p className='opacity-70 mt-2'>Seller : {item.product.brand}</p>
                     <div className='flex space-x-5 items-center text-gray-900 pt-6'>
-                        <p className='font-semibold'>₹{item.discountedPrice}</p>
-                        <p className='line-through opacity-50'>₹{item.price}</p>
+                        <p className='font-semibold'>₹{item.product.discountedPrice}</p>
+                        <p className='line-through opacity-50'>₹{item.product.price}</p>
                         <p className='font-semibold text-green-600'>{item.product.discountPercent}% off</p>
                     </div>
                 </div>
             </div>
 
             {/* Should not display the option to more items once the order got placed */}
-            {step !== 3 && <div className='lg:flex items-center lg:space-x-10 pt-4'>
+            {step != 3 && <div className='lg:flex items-center lg:space-x-10 pt-4'>
                 <div className='flex items-center space-x-2'>
                     <IconButton onClick={() => {handleupdateCartItem(-1)}} disabled={item.quantity <= 1}>
                         <RemoveCircleOutlineIcon  />

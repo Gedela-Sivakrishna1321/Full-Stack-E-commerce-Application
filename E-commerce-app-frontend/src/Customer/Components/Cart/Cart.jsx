@@ -4,23 +4,33 @@ import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCart } from '../../../Redux/Cart/Action'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {cart} = useSelector(store => store);
+  const jwt = localStorage.getItem("jwt");
 
   function handleCheckout() {
-    navigate(`/checkout?step=${2}`)
+    if(cart.cartItems.length == 0) {
+      toast.warn("There should be atleast 1 cart item");
+    } 
+    else {
+      navigate(`/checkout?step=${2}`)
+    }
   }
 
   useEffect(()=>{
-    dispatch(getCart())
-  },[cart.updatecartItem, cart.deletecartItem])
+    dispatch(getCart(jwt))
+  },[cart.updatecartItem, cart.deletecartItem, cart.addToCart])
 
   // console.log(cart.cart?.totalPrice);
   // console.log(cart.cart?.totalDiscountedPrice);
   // console.log(cart.cart?.discount);
+  console.log("CART ++ = ", cart.cart)
 
   return (
     <div className='lg:grid grid-cols-3 lg:px-16 relative' >
@@ -57,6 +67,8 @@ const Cart = () => {
           </Button>
         </div>
       </div>
+
+      <ToastContainer/>
 
     </div>
   )
